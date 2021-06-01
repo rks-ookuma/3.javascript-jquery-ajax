@@ -1,67 +1,53 @@
+'use strict';
+
 $(function(){
+
+    // この方法では最初にダミーの38,000円が一瞬見えてしまう
+    let totalPrice = calcPrice();
+    $('#price').text(totalPrice.toLocaleString());
+
     $(document).on('change','input[name="responsibleCompany"]',function(){
-        let sumPrice = calcPrice();
-        console.log(sumPrice);
+        let totalPrice = calcPrice();
+        $('#price').text(totalPrice.toLocaleString());
     })
 
+    $('input[type="checkbox"]').on('change',function(){
+        let totalPrice = calcPrice();
+        $('#price').text(totalPrice.toLocaleString());
+    })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $('select[name=area]').on('change',function(){
+        let totalPrice = calcPrice();
+        $('#price').text(totalPrice.toLocaleString());
+    })
 
     function calcPrice(){
-        let sumPrice = priceBySize() + priceByTopping();
-        return sumPrice;
-    }
-    
-    function priceByTopping(){
-        let size = $('input[type="radio"]:checked').val();
-        let toppingPrice = 0;
+        let size = $('input[name="responsibleCompany"]:checked').val();
+        let quantity = $('select[name=area]').val();
+        let toppingCount = $('input[type="checkbox"]:checked').length;
+
+        let priceOfSize = 0;
         switch (size) {
             case 'M':
-                toppingPrice = 200;
+                priceOfSize = 1380;
                 break;
             case 'L':
-                toppingPrice = 300;
+                priceOfSize = 2380;
                 break;
         }
-        let toppingCount = $('.col-sm-12 input[type="checkbox"]:checked').length;
-        return  toppingPrice * toppingCount;
-    }
-    
-    function priceBySize(){
-        let size = $('input[type="radio"]:checked').val();
-        let priceBySize = 0;
+        let priceOfTopping = 0;
         switch (size) {
             case 'M':
-                priceBySize = 1380;
+                priceOfTopping = 200;
                 break;
             case 'L':
-                priceBySize = 2380;
+                priceOfTopping = 300;
                 break;
         }
-        return priceBySize;
+        
+        let totalPrice = (priceOfSize + (priceOfTopping * toppingCount) ) * quantity;
+        return totalPrice;
     }
+
 })
 
